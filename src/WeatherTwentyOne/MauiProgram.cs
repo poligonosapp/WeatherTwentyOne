@@ -2,6 +2,22 @@
 
 namespace WeatherTwentyOne;
 
+using (SentrySdk.Init(o => 
+{
+    // Tells which project in Sentry to send events to:
+    o.Dsn = "https://f05bf621e53c48fc83bad61fd76eb1b9@o1129392.ingest.sentry.io/6173501";
+    // When configuring for the first time, to see what the SDK is doing:
+    o.Debug = true;
+    // Set traces_sample_rate to 1.0 to capture 100% of transactions for performance monitoring.
+    // We recommend adjusting this value in production.
+    o.TracesSampleRate = 1.0; 
+}))
+{
+    // App code goes here - Disposing will flush events out
+}
+
+using Sentry;
+
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
@@ -40,6 +56,14 @@ public static class MauiProgram
 
 
 
+        try
+        {
+            throw null;
+        }
+        catch (Exception ex)
+        {
+            SentrySdk.CaptureException(ex);
+        }
 
         return builder.Build();
     }
